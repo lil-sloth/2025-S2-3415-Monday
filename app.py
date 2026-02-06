@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request
-#in terminal type: pip install flask
+#in terminal: pip install flask
+import joblib
+#in terminal: pip install joblib
+
+model = joblib.load('DBS_SGD_model.pkl')
 
 app = Flask(__name__)
 
@@ -14,6 +18,13 @@ def main():
 @app.route("/dbs",methods=["GET","POST"])
 def dbs():
     return(render_template('dbs.html'))
+
+@app.route("/dbsPrediction",methods=["GET","POST"])
+def dbsPrediction():
+    q = float(request.form.get("q"))
+    r = model.predict([[1.29]])
+    r = r[0][0]
+    return(render_template('dbsPrediction.html', r=r))
 
 if __name__ == "__main__":
     app.run()
